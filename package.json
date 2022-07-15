@@ -1,0 +1,24 @@
+{
+  "name": "vite-sharex",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "types:dl": "curl http://localhost:3000/docs-json --output spec.json",
+    "types:gen": "openapi --input ./spec.json --output ./src/api",
+    "types": "pnpm types:dl && pnpm types:gen",
+    "docker:build": "docker build --pull --rm -f Dockerfile -t vitesharex:latest ."
+  },
+  "devDependencies": {
+    "@types/prismjs": "^1.26.0",
+    "openapi-typescript-codegen": "^0.23.0",
+    "typescript": "^4.6.4",
+    "vite": "^3.0.0"
+  },
+  "dependencies": {
+    "prismjs": "^1.28.0"
+  }
+}

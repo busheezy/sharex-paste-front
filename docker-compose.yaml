@@ -1,0 +1,19 @@
+version: '3'
+
+networks:
+  sharex:
+    external: true
+
+services:
+  front:
+    image: vitesharex:latest
+    container_name: vitesharex
+    tty: true
+    networks:
+      - sharex
+    volumes:
+      - ./docker/dist:/vite-sharex/dist
+    environment:
+      VITE_APP_API_URL: ${VITE_APP_API_URL}
+      GENERATE_API: "${GENERATE_API}"
+      TYPES_URL: ${TYPES_URL}
