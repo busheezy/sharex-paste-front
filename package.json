@@ -10,7 +10,7 @@
     "types:dl": "curl http://localhost:3000/docs-json --output spec.json",
     "types:gen": "openapi --input ./spec.json --output ./src/api",
     "types": "pnpm types:dl && pnpm types:gen",
-    "docker:build": "docker build --pull --rm -t busheezy/sharex-paste-front:latest .",
+    "docker:build": "docker build --no-cache --pull --rm -t busheezy/sharex-paste-front:latest .",
     "docker:push": "docker push busheezy/sharex-paste-front:latest"
   },
   "devDependencies": {
