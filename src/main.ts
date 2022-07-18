@@ -48,7 +48,7 @@ async function setContentCodeBlock(language: string, paste: string) {
   const lang = language as Lang;
 
   const highlighter = await getHighlighter({
-    theme: "nord",
+    theme: "dracula-pro",
     langs: [lang],
   });
 
