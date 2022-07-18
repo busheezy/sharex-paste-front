@@ -1,20 +1,22 @@
 import { PastesService } from "./api";
-import Prism from "prismjs";
-import "prismjs/plugins/line-numbers/prism-line-numbers.js";
-import "prismjs/plugins/line-numbers/prism-line-numbers.css";
+import { getHighlighter, Lang } from "shiki";
 import "./style.css";
 
-Prism.hooks.add("before-sanity-check", function (env) {
-  env.element.innerHTML = env.element.innerHTML.replace(/<br>/g, "\n");
-  env.code = env.element.textContent!;
-});
+import { setCDN } from "shiki";
+setCDN("/shiki/");
 
 window.onload = async () => {
   const fullPath = window.location.pathname;
   const [, id, language] = fullPath.split("/");
 
   const paste = await PastesService.pastesControllerFindOne(id);
-  setContentCodeBlock(paste, language);
+
+  if (language) {
+    setContentCodeBlock(language, paste);
+  } else {
+    setContentCodeBlockRaw(paste);
+  }
+
   setRawUrl(id);
 
   const copyBtnEl = document.querySelector<HTMLButtonElement>("#copyBtn")!;
@@ -30,9 +32,8 @@ function setRawUrl(id: string) {
   anchorEl.href = `${apiUrl}/p/${id}`;
 }
 
-function setContentCodeBlock(paste: string, language = "none") {
+function setContentCodeBlockRaw(paste: string) {
   const codeEl = document.createElement("code");
-  codeEl.className = `line-numbers language-${language}`;
   codeEl.innerText = paste;
 
   const preEl = document.createElement("pre");
@@ -41,7 +42,29 @@ function setContentCodeBlock(paste: string, language = "none") {
   const contentEl = document.querySelector<HTMLDivElement>("#content")!;
 
   contentEl.appendChild(preEl);
-  Prism.highlightElement(codeEl);
+}
+
+async function setContentCodeBlock(language: string, paste: string) {
+  const lang = language as Lang;
+
+  const highlighter = await getHighlighter({
+    theme: "nord",
+    langs: [lang],
+  });
+
+  const html = highlighter.codeToHtml(paste, {
+    lang: lang,
+  });
+
+  const codeEl = document.createElement("code");
+  codeEl.innerHTML = html;
+
+  const preEl = document.createElement("pre");
+  preEl.appendChild(codeEl);
+
+  const contentEl = document.querySelector<HTMLDivElement>("#content")!;
+
+  contentEl.appendChild(preEl);
 }
 
 export function copyText(paste: string) {

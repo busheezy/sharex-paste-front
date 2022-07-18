@@ -1,17 +1,15 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@types/prismjs': ^1.26.0
   openapi-typescript-codegen: ^0.23.0
-  prismjs: ^1.28.0
+  shiki: ^0.10.1
   typescript: ^4.6.4
   vite: ^3.0.0
 
 dependencies:
-  prismjs: 1.28.0
+  shiki: 0.10.1
 
 devDependencies:
-  '@types/prismjs': 1.26.0
   openapi-typescript-codegen: 0.23.0
   typescript: 4.7.4
   vite: 3.0.0
@@ -33,10 +31,6 @@ packages:
 
   /@types/json-schema/7.0.11:
     resolution: {integrity: sha512-wOuvG1SN4Us4rez+tylwwwCV1psiNVOkJeM3AUWUNWg/jDQY2+HE/444y5gc+jBmRqASOm2Oeh5c1axHobwRKQ==}
-    dev: true
-
-  /@types/prismjs/1.26.0:
-    resolution: {integrity: sha512-ZTaqn/qSqUuAq1YwvOFQfVW1AR/oQJlLSZVustdjwI+GZ8kr0MSHBj0tsXPW1EqHubx50gtBEjbPGsdZwQwCjQ==}
     dev: true
 
   /argparse/2.0.1:
@@ -330,6 +324,10 @@ packages:
       '@apidevtools/json-schema-ref-parser': 9.0.9
     dev: true
 
+  /jsonc-parser/3.1.0:
+    resolution: {integrity: sha512-DRf0QjnNeCUds3xTjKlQQ3DpJD51GvDjJfnxUVWg6PZTo2otSm+slzNAxU/35hF8/oJIKoG9slq30JYOsF2azg==}
+    dev: false
+
   /jsonfile/6.1.0:
     resolution: {integrity: sha512-5dgndWOriYSm5cnYaJNhalLNDKOqFwyDB/rr1E9ZsGciGvKPs8R2xYGCacuf3z6K1YKDz182fd+fY3cn3pMqXQ==}
     dependencies:
@@ -380,11 +378,6 @@ packages:
       source-map-js: 1.0.2
     dev: true
 
-  /prismjs/1.28.0:
-    resolution: {integrity: sha512-8aaXdYvl1F7iC7Xm1spqSaY/OJBpYW3v+KJ+F17iYxvdc8sfjW194COK5wVhMZX45tGteiBQgdvD/nhxcRwylw==}
-    engines: {node: '>=6'}
-    dev: false
-
   /resolve/1.22.1:
     resolution: {integrity: sha512-nBpuuYuY5jFsli/JIs1oldw6fOQCBioohqWZg/2hiaOybXOft4lonv85uDOKXdf8rhyK159cxU5cDcK/NKk8zw==}
     hasBin: true
@@ -401,6 +394,14 @@ packages:
     optionalDependencies:
       fsevents: 2.3.2
     dev: true
+
+  /shiki/0.10.1:
+    resolution: {integrity: sha512-VsY7QJVzU51j5o1+DguUd+6vmCmZ5v/6gYu4vyYAhzjuNQU6P/vmSy4uQaOhvje031qQMiW0d2BwgMH52vqMng==}
+    dependencies:
+      jsonc-parser: 3.1.0
+      vscode-oniguruma: 1.6.2
+      vscode-textmate: 5.2.0
+    dev: false
 
   /source-map-js/1.0.2:
     resolution: {integrity: sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw==}
@@ -462,6 +463,14 @@ packages:
     optionalDependencies:
       fsevents: 2.3.2
     dev: true
+
+  /vscode-oniguruma/1.6.2:
+    resolution: {integrity: sha512-KH8+KKov5eS/9WhofZR8M8dMHWN2gTxjMsG4jd04YhpbPR91fUj7rYQ2/XjeHCJWbg7X++ApRIU9NUwM2vTvLA==}
+    dev: false
+
+  /vscode-textmate/5.2.0:
+    resolution: {integrity: sha512-Uw5ooOQxRASHgu6C7GVvUxisKXfSgW4oFlO+aa+PAkgmH89O3CXxEEzNRNtHSqtXFTl0nAC1uYj0GMSH27uwtQ==}
+    dev: false
 
   /wordwrap/1.0.0:
     resolution: {integrity: sha512-gvVzJFlPycKc5dZN4yPkP8w7Dc37BtP1yczEneOb4uq34pXZcvrtRTmWV8W+Ume+XCxKgbjM+nevkyFPMybd4Q==}
