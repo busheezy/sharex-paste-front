@@ -1,46 +1,139 @@
-body,
-html {
-  padding: 0;
-  margin: 0;
-  background: #22212C;
+:root {
+  color-scheme: dark;
+  font-family: system-ui, sans-serif;
   color: #f8f8f2;
-  font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
-  font-size: 1em;
-  line-height: 1em;
+  background: #191820;
+  font-synthesis: none;
+  line-height: 1.6;
 }
 
-a:link,
-a:active,
-a:visited {
-  color: #f8f8f2;
-  background-color: transparent;
-  text-decoration: none;
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
 }
 
 #app {
-  padding: 20px;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: clamp(16px, 4vw, 48px);
 }
 
-#content {
-  padding: 20px 0;
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.brand {
+  color: #f8f8f2;
+  font-size: 1.25rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.brand span {
+  color: #bca5f4;
+  font-weight: 400;
+}
+
+#status {
+  margin: 6px 0 0;
+  color: #b7b5c5;
+  font-size: 0.875rem;
+}
+
+nav {
+  display: flex;
+  gap: 10px;
 }
 
 .btn {
-  padding: 5px;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 8px 16px;
+  border: 1px solid #51495f;
+  border-radius: 8px;
+  color: #f8f8f2;
+  background: #292631;
+  font: inherit;
+  font-size: 0.875rem;
+  text-decoration: none;
   cursor: pointer;
 }
 
+.btn[hidden] {
+  display: none;
+}
+
+.btn:hover:not(:disabled) {
+  background: #3a3448;
+}
+
+.primary {
+  background: #bca5f4;
+  border-color: #bca5f4;
+  color: #21192f;
+  font-weight: 600;
+}
+
+.primary:hover:not(:disabled) {
+  background: #d0bcff;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+:focus-visible {
+  outline: 2px solid #bca5f4;
+  outline-offset: 4px;
+}
+
+#content {
+  overflow-x: auto;
+  border: 1px solid #3a3547;
+  border-radius: 12px;
+  min-height: 240px;
+  background: #22212c;
+}
+
+pre {
+  margin: 0;
+  padding: 24px;
+  min-height: 240px;
+  width: max-content;
+  min-width: 100%;
+  tab-size: 2;
+}
+
 code {
-  counter-reset: step;
-  counter-increment: step 0;
+  font-family: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+  font-size: 0.875rem;
+  line-height: 1.75;
+  counter-reset: line;
 }
 
 code .line::before {
-  content: counter(step);
-  counter-increment: step;
-  width: 1rem;
-  margin-right: 1.5rem;
+  content: counter(line);
+  counter-increment: line;
   display: inline-block;
+  min-width: 3ch;
+  margin-right: 24px;
   text-align: right;
-  color: rgba(115,138,148,.4)
+  color: #8e879e;
+  user-select: none;
+}
+
+footer {
+  margin-top: 20px;
+  color: #a49cb3;
+  font-size: 0.75rem;
 }

@@ -1,24 +1,32 @@
 {
   "name": "vite-sharex",
-  "private": true,
   "version": "0.0.0",
+  "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "types:dl": "curl http://localhost:3000/docs-json --output spec.json",
-    "types:gen": "openapi --input ./spec.json --output ./src/api",
-    "types": "pnpm types:dl && pnpm types:gen",
-    "docker:build": "docker build --no-cache --pull --rm -t busheezy/sharex-paste-front:latest .",
-    "docker:push": "docker push busheezy/sharex-paste-front:latest"
-  },
-  "devDependencies": {
-    "openapi-typescript-codegen": "^0.23.0",
-    "typescript": "^4.6.4",
-    "vite": "^3.0.0"
+    "docker:build": "docker build --no-cache --pull --rm -t ghcr.io/busheezy/sharex-paste-front:latest .",
+    "docker:push": "docker push ghcr.io/busheezy/sharex-paste-front:latest",
+    "lint": "oxlint --deny-warnings",
+    "lint:fix": "oxlint --fix",
+    "format": "oxfmt --write .",
+    "format:check": "oxfmt --check .",
+    "typecheck": "tsc --noEmit",
+    "check": "pnpm lint && pnpm format:check && pnpm typecheck"
   },
   "dependencies": {
-    "shiki": "^0.10.1"
-  }
+    "shiki": "^4.4.3"
+  },
+  "devDependencies": {
+    "oxfmt": "0.66.0",
+    "oxlint": "1.81.0",
+    "typescript": "~5.9.3",
+    "vite": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=24.19.0 <25"
+  },
+  "packageManager": "pnpm@10.34.5"
 }

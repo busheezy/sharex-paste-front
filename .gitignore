@@ -28,3 +28,5 @@ spec.json
 
 .env
 docker
+*.tsbuildinfo
+!.vscode/settings.json

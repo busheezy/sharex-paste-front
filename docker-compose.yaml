@@ -1,19 +1,9 @@
-version: '3'
-
-networks:
-  sharex:
-    external: true
-
 services:
   front:
-    image: vitesharex:latest
-    container_name: vitesharex
-    tty: true
-    networks:
-      - sharex
+    build: .
+    image: ghcr.io/busheezy/sharex-paste-front:local
     volumes:
       - ./docker/dist:/vite-sharex/dist
     environment:
-      VITE_APP_API_URL: ${VITE_APP_API_URL}
-      GENERATE_API: "${GENERATE_API}"
-      TYPES_URL: ${TYPES_URL}
+      VITE_APP_API_URL: "${VITE_APP_API_URL:-/api}"
+      GENERATE_API: "${GENERATE_API:-true}"

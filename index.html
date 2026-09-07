@@ -1,20 +1,29 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="description" content="A simple, private home for your shared text and code." />
     <title>ShareX Paste</title>
   </head>
   <body>
-    <div id="app">
-      <a id="rawAnchor" target="_blank">
-        <button class="btn">Raw</button>
-      </a>
-      <button id="copyBtn" class="btn">Copy</button>
-
-      <div id="content"></div>
-    </div>
-
+    <main id="app">
+      <header class="toolbar">
+        <div>
+          <a class="brand" href="/">ShareX <span>Paste</span></a>
+          <p id="status" role="status" aria-live="polite">Loading paste…</p>
+        </div>
+        <nav aria-label="Paste actions">
+          <a id="rawAnchor" class="btn" target="_blank" rel="noopener noreferrer" hidden
+            >Raw text</a
+          >
+          <button id="copyBtn" class="btn primary" type="button" disabled>Copy text</button>
+        </nav>
+      </header>
+      <div id="content" tabindex="0" role="region" aria-label="Paste content"></div>
+      <footer>Your text, ready to share.</footer>
+    </main>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
