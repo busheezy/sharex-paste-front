@@ -4,10 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="color-scheme" content="dark light" />
-    <meta name="description" content="A quiet, thoughtful space for shared text and code." />
+    <meta name="description" content="A text and code viewer." />
     <meta name="theme-color" content="#111217" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <title>Paste — text, beautifully simple.</title>
+    <title>Paste</title>
   </head>
   <body>
     <svg class="symbols" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
@@ -39,77 +39,11 @@
         <path d="M3 5h18M3 10h14a4 4 0 0 1 0 8h-6m3-3-3 3 3 3M3 16h4" />
       </symbol>
     </svg>
-    <header class="site-header">
-      <a class="brand" href="/" aria-label="Paste home"
-        ><span class="brand-mark" aria-hidden="true">/</span>paste<span class="brand-dot"
-          >.</span
-        ></a
-      >
-      <span class="header-caption">A little space for your ideas.</span>
-      <div class="header-actions">
-        <button
-          id="helpBtn"
-          class="icon-button"
-          aria-label="Keyboard shortcuts"
-          title="Keyboard shortcuts (?)"
-        >
-          ?
-        </button>
-        <button
-          id="themeBtn"
-          class="icon-button"
-          aria-label="Switch color theme"
-          title="Switch color theme"
-        >
-          <svg><use href="#icon-theme" /></svg>
-        </button>
-      </div>
-    </header>
     <main id="app">
       <section id="home" class="home" hidden>
-        <div class="eyebrow"><span class="live-dot"></span> LESS NOISE. MORE CONTEXT.</div>
-        <h1>Good text deserves<br />a little <span>breathing room.</span></h1>
-        <p class="home-description">
-          Code snippets, notes, and everything in between.<br />Open a paste and make yourself
-          comfortable.
-        </p>
-        <form id="openForm" class="open-form">
-          <label for="pasteInput">Open a paste</label>
-          <div class="input-row">
-            <input
-              id="pasteInput"
-              placeholder="Paste a link or enter an ID"
-              autocomplete="off"
-              spellcheck="false"
-              required
-            /><button class="button primary" type="submit">
-              Open paste <span aria-hidden="true">↗</span>
-            </button>
-          </div>
-          <p id="openError" class="form-error" role="alert"></p>
-        </form>
-        <div class="feature-row">
-          <span><span aria-hidden="true">⌘</span> Keyboard friendly</span
-          ><span><span aria-hidden="true">{ }</span> Syntax aware</span
-          ><span><span aria-hidden="true">◐</span> Yours to read</span>
-        </div>
+        <a href="https://github.com/busheezy/sharex-paste-front">View project on GitHub</a>
       </section>
       <section id="viewer" hidden aria-label="Paste viewer">
-        <div class="page-heading">
-          <div>
-            <div class="eyebrow">SHARED TEXT / <span id="pasteId"></span></div>
-            <h1 id="pasteTitle">Untitled paste</h1>
-            <p id="pasteMeta" class="muted">Fetching your text…</p>
-          </div>
-          <div class="paste-actions">
-            <button id="shareBtn" class="button" disabled>
-              <svg><use href="#icon-link" /></svg>Copy link
-            </button>
-            <button id="copyBtn" class="button primary" disabled>
-              <svg><use href="#icon-copy" /></svg>Copy text <kbd>C</kbd>
-            </button>
-          </div>
-        </div>
         <div class="reading-layout">
           <section id="editor" class="editor" aria-label="Reading workspace">
             <div class="editor-toolbar">
@@ -129,7 +63,7 @@
                 >
                   <svg><use href="#icon-search" /></svg>
                 </button>
-                <span class="divider"></span>
+
                 <button
                   id="wrapBtn"
                   class="icon-button"
@@ -155,6 +89,66 @@
                   title="Fullscreen (F)"
                 >
                   <svg><use href="#icon-expand" /></svg>
+                </button>
+                <button
+                  id="copyBtn"
+                  class="icon-button"
+                  disabled
+                  aria-label="Copy text"
+                  title="Copy text (C)"
+                >
+                  <svg><use href="#icon-copy" /></svg>
+                </button>
+                <button
+                  id="shareBtn"
+                  class="icon-button"
+                  disabled
+                  aria-label="Copy link"
+                  title="Copy link"
+                >
+                  <svg><use href="#icon-link" /></svg>
+                </button>
+                <button
+                  id="downloadBtn"
+                  class="icon-button"
+                  disabled
+                  aria-label="Download text"
+                  title="Download text"
+                >
+                  <svg><use href="#icon-download" /></svg>
+                </button>
+                <a
+                  id="rawAnchor"
+                  class="icon-button"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="View raw"
+                  title="View raw"
+                  hidden
+                  >{ }</a
+                >
+                <label class="font-control" title="Text size"
+                  ><span class="sr-only">Text size</span
+                  ><input id="fontSize" type="range" min="12" max="22" step="1" value="14" /><output
+                    id="fontValue"
+                    >14px</output
+                  ></label
+                >
+                <button
+                  id="themeBtn"
+                  class="icon-button"
+                  aria-label="Switch color theme"
+                  title="Switch color theme"
+                >
+                  <svg><use href="#icon-theme" /></svg>
+                </button>
+                <button
+                  id="helpBtn"
+                  class="icon-button"
+                  aria-label="Keyboard shortcuts"
+                  title="Keyboard shortcuts (?)"
+                >
+                  ?
                 </button>
               </div>
             </div>
@@ -201,56 +195,17 @@
               aria-label="Paste content"
               aria-busy="true"
             ></div>
-            <div class="editor-footer">
-              <span id="renderStatus">Getting things ready</span
-              ><span id="encoding">UTF-8 <span class="footer-separator">/</span> TEXT</span>
-            </div>
+            <p id="renderStatus" class="render-status" role="status"></p>
           </section>
-          <aside class="sidebar" aria-label="Reading options">
-            <div class="sidebar-section">
-              <h2>MAKE IT YOURS</h2>
-              <label class="font-label" for="fontSize"
-                >Text size <output id="fontValue">14 px</output></label
-              ><input id="fontSize" type="range" min="12" max="22" step="1" value="14" />
-              <div class="range-labels" aria-hidden="true"><span>Aa</span><span>Aa</span></div>
-            </div>
-            <div class="sidebar-section">
-              <h2>TAKE IT WITH YOU</h2>
-              <button id="downloadBtn" class="sidebar-action" disabled>
-                <svg><use href="#icon-download" /></svg>Download text<span aria-hidden="true"
-                  >↗</span
-                ></button
-              ><a
-                id="rawAnchor"
-                class="sidebar-action"
-                target="_blank"
-                rel="noopener noreferrer"
-                hidden
-                ><span class="raw-icon" aria-hidden="true">{ }</span>View raw<span
-                  aria-hidden="true"
-                  >↗</span
-                ></a
-              >
-            </div>
-            <div class="sidebar-note">
-              <span class="note-symbol" aria-hidden="true">⌁</span>
-              <p>A clearer view.<br />The text stays exactly<br />as it was shared.</p>
-            </div>
-            <button id="shortcutsBtn" class="shortcut-link">Keyboard shortcuts <kbd>?</kbd></button>
-          </aside>
         </div>
       </section>
       <p id="status" class="status" role="status" aria-live="polite"></p>
     </main>
-    <footer class="site-footer">
-      <span>Simple by design.</span><span>Made for the words that matter.</span>
-    </footer>
     <dialog id="shortcutsDialog" aria-labelledby="shortcutsTitle">
       <form method="dialog">
         <button class="icon-button dialog-close" aria-label="Close keyboard shortcuts">×</button>
       </form>
-      <div class="eyebrow">AT YOUR FINGERTIPS</div>
-      <h2 id="shortcutsTitle">A few useful shortcuts.</h2>
+      <h2 id="shortcutsTitle">Keyboard shortcuts</h2>
       <dl class="shortcuts">
         <div>
           <dt>Find in paste</dt>
@@ -277,7 +232,6 @@
           <dd><kbd>Esc</kbd></dd>
         </div>
       </dl>
-      <p class="muted">Click a line number to link directly to that line.</p>
     </dialog>
     <script type="module" src="/src/main.ts"></script>
   </body>

@@ -82,9 +82,7 @@ export async function render() {
   const elements = visible.map(makeLine);
   content.replaceChildren(...elements);
   const truncated = lines.length > visible.length;
-  renderStatus.textContent = truncated
-    ? "First 10,000 lines · download for the full paste"
-    : "All changes affect your view only";
+  renderStatus.textContent = truncated ? "First 10,000 lines · download for the full paste" : "";
   if (state.query) {
     navigateMatch(0);
     return;

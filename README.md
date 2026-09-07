@@ -1,6 +1,6 @@
 # Paste
 
-A modern, distraction-free viewer for shared text and code. Open `/:id` for plain text or `/:id/:language` for syntax highlighting, such as `/abc123/typescript`. Existing API and shared-link formats remain compatible.
+A minimal viewer for shared text and code. Open `/:id` for plain text or `/:id/:language` for syntax highlighting, such as `/abc123/typescript`. Existing API and shared-link formats remain compatible.
 
 - Light and dark themes, syntax highlighting, and language selection.
 - In-paste search with next/previous matches, line numbers, and shareable line anchors.
@@ -8,7 +8,7 @@ A modern, distraction-free viewer for shared text and code. Open `/:id` for plai
 - Copy text, copy the current link, download the original text, or open the raw response.
 - Responsive layout, keyboard shortcuts, accessible controls, and retryable loading errors.
 
-The home screen accepts a paste ID or a link from the same site. This is a viewer; it does not require an API key or create pastes. Display preferences are saved locally; paste contents are not stored in browser storage. Text and syntax tokens are inserted as text nodes, never interpreted as HTML.
+The home screen contains only a link to this GitHub project. This is a viewer; it does not require an API key or create pastes. Display preferences are saved locally; paste contents are not stored in browser storage. Text and syntax tokens are inserted as text nodes, never interpreted as HTML.
 
 Press `Ctrl/Cmd+F` to search, `Enter` / `Shift+Enter` to navigate matches, `Escape` to close search, `C` to copy, `W` to wrap, `F` for fullscreen, and `?` for help. Click a line number, then copy the link to share that line.
 

@@ -148,7 +148,6 @@ function initializeControls() {
     fullscreenButton.setAttribute("aria-pressed", String(active));
   };
   document.querySelector<HTMLButtonElement>("#helpBtn")!.onclick = () => dialog.showModal();
-  document.querySelector<HTMLButtonElement>("#shortcutsBtn")!.onclick = () => dialog.showModal();
   language.onchange = () => {
     const id = encodeURIComponent(state.id);
     const suffix = language.value === "text" ? "" : `/${language.value}`;
@@ -159,36 +158,10 @@ function initializeControls() {
   document.addEventListener("keydown", handleKeydown);
 }
 
-function openPaste(event: SubmitEvent) {
-  event.preventDefault();
-  const input = document.querySelector<HTMLInputElement>("#pasteInput")!;
-  const error = document.querySelector<HTMLElement>("#openError")!;
-  const value = input.value.trim();
-  try {
-    const url = new URL(value, window.location.origin);
-    if (url.origin !== window.location.origin) {
-      throw new Error("Use a paste link from this site, or enter its ID.");
-    }
-    const valid = /^\/[A-Za-z0-9_-]+(?:\/[A-Za-z0-9_+#.-]+)?\/?$/.test(url.pathname);
-    if (!valid) {
-      throw new Error("Enter a valid paste ID or shared paste link.");
-    }
-    window.location.assign(url.pathname + url.hash);
-  } catch (cause) {
-    error.textContent = cause instanceof Error ? cause.message : "Could not open this link.";
-  }
-}
-
 function displayPaste(paste: string, url: URL) {
   state.paste = paste;
   state.loaded = true;
   document.title = `${state.id} · Paste`;
-  const lineCount = paste.split(/\r\n|\n|\r/).length.toLocaleString();
-  const characters = paste.length.toLocaleString();
-  const bytes = new Blob([paste]).size;
-  const size = new Intl.NumberFormat(undefined, { maximumFractionDigits: 1 }).format(bytes / 1024);
-  document.querySelector<HTMLElement>("#pasteMeta")!.textContent =
-    `${lineCount} lines · ${characters} characters · ${size} KB`;
   rawAnchor.href = url.toString();
   rawAnchor.hidden = false;
   for (const button of [copyButton, shareButton, downloadButton, searchButton, language]) {
@@ -197,7 +170,7 @@ function displayPaste(paste: string, url: URL) {
   loading.hidden = true;
   content.hidden = false;
   content.setAttribute("aria-busy", "false");
-  status.textContent = "Paste ready.";
+  status.textContent = "";
 }
 
 async function loadPaste() {
@@ -208,8 +181,6 @@ async function loadPaste() {
     const [, encodedId = "", encodedLanguage = ""] = window.location.pathname.split("/");
     state.id = decodeURIComponent(encodedId);
     const requestedLanguage = decodeURIComponent(encodedLanguage);
-    document.querySelector<HTMLElement>("#pasteId")!.textContent = state.id;
-    document.querySelector<HTMLElement>("#pasteTitle")!.textContent = `Paste ${state.id}`;
     const url = getPasteUrl(state.id);
     const signal = AbortSignal.timeout(30_000);
     const response = await fetch(url, { signal });
@@ -227,13 +198,12 @@ async function loadPaste() {
     errorPanel.hidden = false;
     const message = cause instanceof Error ? cause.message : "Check your connection and try again.";
     document.querySelector<HTMLElement>("#errorMessage")!.textContent = message;
-    status.textContent = "Could not load the paste.";
+    status.textContent = "";
   }
 }
 
 initializePreferences();
 initializeControls();
-document.querySelector<HTMLFormElement>("#openForm")!.onsubmit = openPaste;
 document.querySelector<HTMLButtonElement>("#retryBtn")!.onclick = loadPaste;
 const isHome = window.location.pathname === "/";
 document.querySelector<HTMLElement>("#home")!.hidden = !isHome;
