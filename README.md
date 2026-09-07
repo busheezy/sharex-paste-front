@@ -6,11 +6,11 @@ The viewer preserves the Dracula Pro colors, loads language support on demand, a
 
 ## Development
 
-Use Node.js 24.19+ within 24.x and pnpm 10.34.5.
+Use Node.js 24.19+ within 24.x and pnpm 12.3.4.
 
 ```sh
 nvm use
-npm install --global pnpm@10.34.5
+npm install --global pnpm@12.3.4
 pnpm install --frozen-lockfile
 pnpm dev
 ```
