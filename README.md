@@ -14,6 +14,10 @@ Press `Ctrl/Cmd+F` to search, `Enter` / `Shift+Enter` to navigate matches, `Esca
 
 Pastes longer than 100,000 characters use plain text. The viewer displays up to 10,000 lines and search marks up to 1,000 matches in those lines. Copy, download, and raw-text actions always preserve the full original paste. Search temporarily uses plain text so matches can span syntax tokens.
 
+## Migrating an existing installation
+
+See the [September 7, 2026 migration guide](MIGRATION.md) for upgrading from before that day’s changes, including verification and rollback.
+
 ## Development
 
 Use Node.js 24.19+ within 24.x and pnpm 12.3.4.
