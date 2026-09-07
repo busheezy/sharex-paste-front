@@ -1,8 +1,18 @@
-# ShareX Paste
+# Paste
 
-A lightweight viewer for text shared through [ShareX API](https://github.com/busheezy/sharex-api). Open `/:id` for plain text or `/:id/:language` for syntax highlighting, such as `/abc123/typescript`.
+A modern, distraction-free viewer for shared text and code. Open `/:id` for plain text or `/:id/:language` for syntax highlighting, such as `/abc123/typescript`. Existing API and shared-link formats remain compatible.
 
-The viewer preserves the Dracula Pro colors, loads language support on demand, and includes keyboard-accessible copy and raw-text actions. Missing pastes, unsupported languages, network failures, and clipboard errors have visible feedback. Paste text is rendered as text; highlighted HTML is produced by Shiki.
+- Light and dark themes, syntax highlighting, and language selection.
+- In-paste search with next/previous matches, line numbers, and shareable line anchors.
+- Adjustable font size, word wrapping, fullscreen, and print styles.
+- Copy text, copy the current link, download the original text, or open the raw response.
+- Responsive layout, keyboard shortcuts, accessible controls, and retryable loading errors.
+
+The home screen accepts a paste ID or a link from the same site. This is a viewer; it does not require an API key or create pastes. Display preferences are saved locally; paste contents are not stored in browser storage. Text and syntax tokens are inserted as text nodes, never interpreted as HTML.
+
+Press `Ctrl/Cmd+F` to search, `Enter` / `Shift+Enter` to navigate matches, `Escape` to close search, `C` to copy, `W` to wrap, `F` for fullscreen, and `?` for help. Click a line number, then copy the link to share that line.
+
+Pastes longer than 100,000 characters use plain text. The viewer displays up to 10,000 lines and search marks up to 1,000 matches in those lines. Copy, download, and raw-text actions always preserve the full original paste. Search temporarily uses plain text so matches can span syntax tokens.
 
 ## Development
 
@@ -44,5 +54,3 @@ The container builds static files into the mounted `./docker/dist` directory and
 ## Image publishing
 
 CI publishes `ghcr.io/busheezy/sharex-paste-front:latest` and `sha-<commit>` tags after checks pass on `main`. Images support Linux amd64 and arm64. Pull requests build images without publishing them. Publishing uses the repository’s GitHub token; Docker Hub credentials are not required.
-
-Pastes longer than 100,000 characters stay in plain text to keep highlighting from blocking the page. Copy and raw-text actions remain available.
