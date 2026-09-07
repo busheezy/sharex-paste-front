@@ -23,6 +23,11 @@ function showPlainText(paste: string) {
 }
 
 async function highlightPaste(language: string, paste: string) {
+  if (paste.length > 100_000) {
+    status.textContent = "Large paste. Showing plain text to keep the page responsive.";
+    return;
+  }
+
   try {
     const { bundledLanguages, codeToHtml } = await import("shiki");
     const isSupported = Object.hasOwn(bundledLanguages, language);

@@ -44,3 +44,5 @@ The container builds static files into the mounted `./docker/dist` directory and
 ## Image publishing
 
 CI publishes `ghcr.io/busheezy/sharex-paste-front:latest` and `sha-<commit>` tags after checks pass on `main`. Images support Linux amd64 and arm64. Pull requests build images without publishing them. Publishing uses the repository’s GitHub token; Docker Hub credentials are not required.
+
+Pastes longer than 100,000 characters stay in plain text to keep highlighting from blocking the page. Copy and raw-text actions remain available.
