@@ -17,7 +17,17 @@ const editor = document.querySelector<HTMLElement>("#editor")!;
 const dialog = document.querySelector<HTMLDialogElement>("#shortcutsDialog")!;
 const loading = document.querySelector<HTMLElement>("#loading")!;
 const errorPanel = document.querySelector<HTMLElement>("#errorPanel")!;
+const home = document.querySelector<HTMLElement>("#home")!;
+const viewer = document.querySelector<HTMLElement>("#viewer")!;
 const state = { paste: "", id: "", loaded: false };
+
+function displayRoute() {
+  const isHome = window.location.pathname === "/";
+  home.hidden = !isHome;
+  viewer.hidden = isHome;
+
+  return isHome;
+}
 
 function getPasteUrl(id: string): URL {
   const configuredUrl = import.meta.env.VITE_APP_API_URL || "/api";
@@ -202,12 +212,20 @@ async function loadPaste() {
   }
 }
 
+const isHome = displayRoute();
 initializePreferences();
 initializeControls();
 document.querySelector<HTMLButtonElement>("#retryBtn")!.onclick = loadPaste;
-const isHome = window.location.pathname === "/";
-document.querySelector<HTMLElement>("#home")!.hidden = !isHome;
-document.querySelector<HTMLElement>("#viewer")!.hidden = isHome;
+window.addEventListener("pageshow", (event) => {
+  if (!event.persisted) {
+    return;
+  }
+
+  const restoredHome = displayRoute();
+  if (!restoredHome) {
+    void loadPaste();
+  }
+});
 if (!isHome) {
   void loadPaste();
 }
