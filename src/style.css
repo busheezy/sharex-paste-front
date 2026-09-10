@@ -112,6 +112,34 @@ select {
   align-items: center;
   gap: 3px;
 }
+.diff-names {
+  max-width: 220px;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.view-control {
+  display: inline-flex;
+  margin-right: 5px;
+  padding: 2px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+}
+.view-control button {
+  height: 26px;
+  padding: 0 9px;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 11px;
+}
+.view-control button[aria-pressed="true"] {
+  background: var(--bg);
+  color: var(--text);
+}
 .icon-button {
   display: inline-flex;
   align-items: center;
@@ -155,6 +183,67 @@ select {
     Consolas,
     monospace;
   tab-size: 2;
+}
+.diff-content {
+  --added-bg: color-mix(in srgb, #36a269 16%, transparent);
+  --removed-bg: color-mix(in srgb, #e05252 16%, transparent);
+  --added-accent: #4fbe7e;
+  --removed-accent: #e66a6a;
+}
+.diff-line,
+.diff-cell {
+  display: flex;
+  min-width: max-content;
+  min-height: 1.7em;
+}
+.diff-line.added,
+.diff-cell.added {
+  background: var(--added-bg);
+}
+.diff-line.removed,
+.diff-cell.removed {
+  background: var(--removed-bg);
+}
+.diff-number {
+  flex: 0 0 48px;
+  padding-right: 10px;
+  color: var(--muted);
+  text-align: right;
+  user-select: none;
+  font-size: 0.85em;
+  opacity: 0.65;
+}
+.diff-marker {
+  width: 22px;
+  color: var(--muted);
+  user-select: none;
+}
+.diff-line.added .diff-marker {
+  color: var(--added-accent);
+}
+.diff-line.removed .diff-marker {
+  color: var(--removed-accent);
+}
+.diff-text {
+  padding-right: 20px;
+  white-space: pre;
+}
+.diff-row {
+  display: grid;
+  grid-template-columns: minmax(50%, max-content) minmax(50%, max-content);
+  min-width: 100%;
+  width: max-content;
+}
+.diff-cell.right {
+  border-left: 1px solid var(--border);
+}
+.diff-cell .diff-number {
+  flex-basis: 58px;
+  padding-right: 14px;
+}
+.diff-cell.empty {
+  background: var(--surface);
+  opacity: 0.55;
 }
 .code-line {
   display: flex;
@@ -298,6 +387,26 @@ dialog h2 {
   margin-top: 0;
   font-size: 18px;
 }
+dialog p,
+dialog label {
+  color: var(--muted);
+  font-size: 13px;
+}
+#compareDialog input {
+  display: block;
+  width: 100%;
+  margin: 8px 0 14px;
+  padding: 9px 10px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: var(--surface);
+  color: var(--text);
+}
+.field-error {
+  min-height: 1.4em;
+  margin: -7px 0 8px;
+  color: var(--removed-accent);
+}
 .dialog-close {
   float: right;
 }
@@ -354,6 +463,17 @@ kbd {
   .line-number {
     flex-basis: 42px;
     padding-right: 12px;
+  }
+  .diff-number {
+    flex-basis: 34px;
+    padding-right: 8px;
+  }
+  .diff-cell .diff-number {
+    flex-basis: 42px;
+    padding-right: 10px;
+  }
+  .diff-content.split .diff-row {
+    grid-template-columns: minmax(280px, max-content) minmax(280px, max-content);
   }
 }
 @media print {

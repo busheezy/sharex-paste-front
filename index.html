@@ -25,6 +25,9 @@
           transform="translate(1 0)"
         />
       </symbol>
+      <symbol id="icon-diff" viewBox="0 0 24 24">
+        <path d="M8 5H4v4m0-4 5 5m7 9h4v-4m0 4-5-5M15 5h5M4 19h5" />
+      </symbol>
       <symbol id="icon-download" viewBox="0 0 24 24">
         <path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5" />
       </symbol>
@@ -47,13 +50,18 @@
         <div class="reading-layout">
           <section id="editor" class="editor" aria-label="Reading workspace">
             <div class="editor-toolbar">
-              <label class="language-control"
+              <label id="languageControl" class="language-control"
                 ><span class="language-dot"></span><span class="sr-only">Syntax language</span
                 ><select id="language" disabled>
                   <option value="text">Plain text</option>
                 </select></label
               >
               <div class="editor-controls">
+                <span id="diffNames" class="diff-names" hidden></span>
+                <div id="diffViewControl" class="view-control" hidden>
+                  <button id="inlineDiffBtn" aria-pressed="true">Inline</button>
+                  <button id="splitDiffBtn" aria-pressed="false">Split</button>
+                </div>
                 <button
                   id="searchBtn"
                   class="icon-button"
@@ -98,6 +106,15 @@
                   title="Copy text (C)"
                 >
                   <svg><use href="#icon-copy" /></svg>
+                </button>
+                <button
+                  id="compareBtn"
+                  class="icon-button"
+                  disabled
+                  aria-label="Compare with another paste"
+                  title="Compare with another paste"
+                >
+                  <svg><use href="#icon-diff" /></svg>
                 </button>
                 <button
                   id="shareBtn"
@@ -201,6 +218,19 @@
       </section>
       <p id="status" class="status" role="status" aria-live="polite"></p>
     </main>
+    <dialog id="compareDialog" aria-labelledby="compareTitle">
+      <form id="compareForm">
+        <button class="icon-button dialog-close" type="button" aria-label="Close comparison">
+          ×
+        </button>
+        <h2 id="compareTitle">Compare pastes</h2>
+        <p>Paste a link or enter the ID of the paste to compare with this one.</p>
+        <label for="compareInput">Paste link or ID</label>
+        <input id="compareInput" autocomplete="off" spellcheck="false" required />
+        <p id="compareError" class="field-error" role="alert"></p>
+        <button class="button" type="submit">Compare</button>
+      </form>
+    </dialog>
     <dialog id="shortcutsDialog" aria-labelledby="shortcutsTitle">
       <form method="dialog">
         <button class="icon-button dialog-close" aria-label="Close keyboard shortcuts">×</button>

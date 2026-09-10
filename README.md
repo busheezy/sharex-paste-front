@@ -4,6 +4,7 @@ A minimal viewer for shared text and code. Open `/:id` for plain text or `/:id/:
 
 - Light and dark themes, syntax highlighting, and language selection.
 - In-paste search with next/previous matches, line numbers, and shareable line anchors.
+- Inline and side-by-side comparisons with shareable `/diff/:left/:right` links.
 - Adjustable font size, word wrapping, fullscreen, and print styles.
 - Copy text, copy the current link, download the original text, or open the raw response.
 - Responsive layout, keyboard shortcuts, accessible controls, and retryable loading errors.
