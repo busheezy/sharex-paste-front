@@ -173,7 +173,7 @@ select {
 .font-control output {
   width: 30px;
 }
-#content {
+.content {
   flex: 1;
   overflow: auto;
   padding: 18px 0;
@@ -421,6 +421,7 @@ mark.active {
 .error-panel {
   padding: 32px 20px;
 }
+.error-panel h1,
 .error-panel h2 {
   font-size: 18px;
   font-weight: 500;
@@ -441,7 +442,7 @@ mark.active {
 .editor:fullscreen {
   height: 100dvh;
 }
-.editor:fullscreen #content {
+.editor:fullscreen .content {
   flex-basis: 0;
 }
 dialog {
@@ -555,7 +556,7 @@ kbd {
   .render-status {
     display: none !important;
   }
-  #content {
+  .content {
     overflow: visible;
     color: #000;
     background: #fff;

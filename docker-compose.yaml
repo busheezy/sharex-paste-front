@@ -1,9 +1,15 @@
 services:
   front:
+    restart: unless-stopped
     build: .
     image: ghcr.io/busheezy/sharex-paste-front:local
-    volumes:
-      - ./docker/dist:/vite-sharex/dist
+    ports:
+      - "127.0.0.1:4000:4000"
     environment:
-      VITE_APP_API_URL: "${VITE_APP_API_URL:-/api}"
-      GENERATE_API: "${GENERATE_API:-true}"
+      NODE_ENV: "${NODE_ENV:-production}"
+      HOST: "0.0.0.0"
+      PORT: "4000"
+      ORIGIN: "${ORIGIN:-http://localhost:4000}"
+      BACKEND_API_URL: "${BACKEND_API_URL:-http://host.docker.internal:3000}"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

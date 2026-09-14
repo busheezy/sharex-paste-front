@@ -1,32 +1,43 @@
 {
-  "name": "vite-sharex",
-  "version": "0.0.4",
+  "name": "sharex-paste-front",
+  "version": "0.0.5",
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview",
+    "dev": "vite dev --port 4000",
+    "build": "vite build",
+    "start": "node build",
+    "preview": "vite preview --port 4000",
+    "prepare": "svelte-kit sync || echo ''",
+    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json && oxlint --deny-warnings && oxfmt --check . && tsc --noEmit",
+    "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "docker:build": "docker build --no-cache --pull --rm -t ghcr.io/busheezy/sharex-paste-front:latest .",
     "docker:push": "docker push ghcr.io/busheezy/sharex-paste-front:latest",
     "lint": "oxlint --deny-warnings",
     "lint:fix": "oxlint --fix",
     "format": "oxfmt --write .",
     "format:check": "oxfmt --check .",
-    "typecheck": "tsc --noEmit",
-    "check": "pnpm lint && pnpm format:check && pnpm typecheck"
+    "typecheck": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json && tsc --noEmit"
   },
   "dependencies": {
     "diff": "^8.0.2",
-    "dompurify": "^3.4.15",
     "marked": "^18.0.13",
-    "shiki": "^4.4.3"
+    "sanitize-html": "^2.17.0",
+    "shiki": "^4.4.3",
+    "zod": "^4.5.4"
   },
   "devDependencies": {
+    "@sveltejs/adapter-node": "^5.5.7",
+    "@sveltejs/kit": "^2.70.3",
+    "@sveltejs/vite-plugin-svelte": "^5.1.1",
+    "@types/node": "^24.10.1",
+    "@types/sanitize-html": "^2.16.0",
     "oxfmt": "0.66.0",
     "oxlint": "1.81.0",
-    "typescript": "~7.0.2",
-    "vite": "^8.2.2"
+    "svelte": "^5.56.10",
+    "svelte-check": "^4.7.6",
+    "typescript": "^6.0.3",
+    "vite": "^6.4.3"
   },
   "engines": {
     "node": ">=24.19.0 <25"
