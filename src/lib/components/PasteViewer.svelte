@@ -428,17 +428,16 @@
           title="Line numbers"
           onclick={toggleLines}>#</button
         >
-        {#if fullscreenEnabled}
-          <button
-            class="icon-button"
-            aria-label="Enter fullscreen"
-            aria-pressed={Boolean(editor && fullscreenElement === editor)}
-            title="Fullscreen (F)"
-            onclick={toggleFullscreen}
-          >
-            <svg><use href="#icon-expand" /></svg>
-          </button>
-        {/if}
+        <button
+          class="icon-button"
+          disabled={!fullscreenEnabled}
+          aria-label="Enter fullscreen"
+          aria-pressed={Boolean(editor && fullscreenElement === editor)}
+          title="Fullscreen (F)"
+          onclick={toggleFullscreen}
+        >
+          <svg><use href="#icon-expand" /></svg>
+        </button>
         <button
           class="icon-button"
           aria-label="Copy text"

@@ -163,17 +163,16 @@
           <svg><use href="#icon-wrap" /></svg>
         </button>
         <button class="icon-button" aria-label="Show line numbers" aria-pressed="true" title="Line numbers">#</button>
-        {#if fullscreenEnabled}
-          <button
-            class="icon-button"
-            aria-label="Enter fullscreen"
-            aria-pressed={Boolean(editor && fullscreenElement === editor)}
-            title="Fullscreen"
-            onclick={toggleFullscreen}
-          >
-            <svg><use href="#icon-expand" /></svg>
-          </button>
-        {/if}
+        <button
+          class="icon-button"
+          disabled={!fullscreenEnabled}
+          aria-label="Enter fullscreen"
+          aria-pressed={Boolean(editor && fullscreenElement === editor)}
+          title="Fullscreen"
+          onclick={toggleFullscreen}
+        >
+          <svg><use href="#icon-expand" /></svg>
+        </button>
         <button class="icon-button" disabled aria-label="Copy text" title="Copy text">
           <svg><use href="#icon-copy" /></svg>
         </button>
