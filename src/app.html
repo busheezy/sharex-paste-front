@@ -24,6 +24,7 @@
         document.documentElement.dataset.theme = theme;
         document.documentElement.dataset.wrap = String(wrapped);
         document.documentElement.dataset.lines = String(numbered);
+        document.documentElement.dataset.fontSize = String(fontSize);
         document.documentElement.style.setProperty("--code-size", `${fontSize}px`);
       } catch {
         document.documentElement.dataset.theme = "dark";
@@ -33,5 +34,15 @@
   </head>
   <body data-sveltekit-preload-data="hover">
     <div style="display: contents">%sveltekit.body%</div>
+    <script nonce="%sveltekit.nonce%">
+      const fontSize = document.documentElement.dataset.fontSize;
+      const fontInput = document.querySelector('[data-font-control] input[type="range"]');
+      const fontOutput = document.querySelector("[data-font-control] output");
+
+      if (fontSize && fontInput instanceof HTMLInputElement && fontOutput) {
+        fontInput.value = fontSize;
+        fontOutput.textContent = `${fontSize}px`;
+      }
+    </script>
   </body>
 </html>

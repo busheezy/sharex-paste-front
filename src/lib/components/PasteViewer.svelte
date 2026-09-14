@@ -19,13 +19,25 @@
     rawUrl: string;
   }
 
+  function getInitialFontSize() {
+    if (typeof document === "undefined") {
+      return 14;
+    }
+
+    const initialFontSize = Number(document.documentElement.dataset.fontSize);
+    const validFontSize =
+      Number.isInteger(initialFontSize) && initialFontSize >= 12 && initialFontSize <= 22;
+
+    return validFontSize ? initialFontSize : 14;
+  }
+
   const { id, language, markdownHtml, paste, rawUrl }: Props = $props();
   let activeMatch = $state(0);
   let compareDialog = $state<HTMLDialogElement>();
   let compareError = $state("");
   let compareInput = $state("");
   let editor = $state<HTMLElement>();
-  let fontSize = $state(14);
+  let fontSize = $state(getInitialFontSize());
   let fullscreenElement = $state<Element | null>(null);
   let fullscreenEnabled = $state(false);
   let highlightedLines = $state.raw<ThemedToken[][] | null>(null);
@@ -399,15 +411,15 @@
           {/each}
         </select>
       </label>
+      {#if isMarkdown}
+        <div class="view-control">
+          <button aria-pressed={!isPreview} onclick={() => setView("source")}>Source</button>
+          <button aria-pressed={isPreview} onclick={() => setView("preview")}>Preview</button>
+        </div>
+      {/if}
       <div class="editor-controls">
-        {#if isMarkdown}
-          <div class="view-control">
-            <button aria-pressed={!isPreview} onclick={() => setView("source")}>Source</button>
-            <button aria-pressed={isPreview} onclick={() => setView("preview")}>Preview</button>
-          </div>
-        {/if}
         <button
-          class="icon-button"
+          class="icon-button source-only-control"
           disabled={isPreview}
           aria-label="Find in paste"
           title="Find in paste (Ctrl/⌘ F)"
@@ -416,7 +428,7 @@
           <svg><use href="#icon-search" /></svg>
         </button>
         <button
-          class="icon-button"
+          class="icon-button source-only-control"
           disabled={isPreview}
           aria-label="Wrap long lines"
           aria-pressed={wrapped}
@@ -426,7 +438,7 @@
           <svg><use href="#icon-wrap" /></svg>
         </button>
         <button
-          class="icon-button"
+          class="icon-button source-only-control"
           disabled={isPreview}
           aria-label="Show line numbers"
           aria-pressed={numbered}
@@ -482,7 +494,7 @@
           aria-label="View raw"
           title="View raw">{"{ }"}</a
         >
-        <label class="font-control" title="Text size">
+        <label class="font-control" data-font-control title="Text size">
           <span class="sr-only">Text size</span>
           <input
             type="range"
