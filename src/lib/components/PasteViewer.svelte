@@ -1,19 +1,20 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
   import { page } from "$app/state";
-  import { languageOptions } from "$lib/languages";
   import {
     buildSourceLines,
     maxHighlightedCharacters,
     maxSearchMatches,
     maxVisibleLines,
+    type HighlightToken,
   } from "$lib/reader";
   import { onMount, tick } from "svelte";
-  import { codeToTokens, type BundledLanguage, type ThemedToken } from "shiki";
 
   interface Props {
+    highlightedLines: HighlightToken[][] | null;
     id: string;
     language: string;
+    languageOptions: Array<{ label: string; value: string }>;
     markdownHtml: string | null;
     paste: string;
     rawUrl: string;
@@ -31,7 +32,15 @@
     return validFontSize ? initialFontSize : 14;
   }
 
-  const { id, language, markdownHtml, paste, rawUrl }: Props = $props();
+  const {
+    highlightedLines,
+    id,
+    language,
+    languageOptions,
+    markdownHtml,
+    paste,
+    rawUrl,
+  }: Props = $props();
   let activeMatch = $state(0);
   let compareDialog = $state<HTMLDialogElement>();
   let compareError = $state("");
@@ -39,8 +48,6 @@
   let editor = $state<HTMLElement>();
   let fontSize = $state(getInitialFontSize());
   let fullscreenElement = $state<Element | null>(null);
-  let fullscreenEnabled = $state(false);
-  let highlightedLines = $state.raw<ThemedToken[][] | null>(null);
   let numbered = $state(true);
   let query = $state("");
   let searchInput = $state<HTMLInputElement>();
@@ -49,7 +56,6 @@
   let status = $state("");
   let theme = $state<"dark" | "light">("dark");
   let wrapped = $state(false);
-  let highlightRevision = 0;
 
   const lineCount = $derived(paste.split(/\r\n|\n|\r/).length);
   const isLargePaste = $derived(paste.length > maxHighlightedCharacters);
@@ -109,30 +115,6 @@
     }
   }
 
-  async function highlight() {
-    const revision = ++highlightRevision;
-    if (isPreview || isLargePaste || language === "text" || query) {
-      highlightedLines = null;
-      return;
-    }
-
-    try {
-      const selectedTheme = theme === "dark" ? "github-dark" : "github-light";
-      const selectedLanguage = language as BundledLanguage;
-      const result = await codeToTokens(paste, {
-        lang: selectedLanguage,
-        theme: selectedTheme,
-      });
-      if (revision !== highlightRevision) {
-        return;
-      }
-      highlightedLines = result.tokens.slice(0, maxVisibleLines);
-    } catch {
-      highlightedLines = null;
-      status = "Highlighting unavailable · showing plain text";
-    }
-  }
-
   function initializePreferences() {
     const storedTheme = readPreference("theme");
     const documentTheme = document.documentElement.dataset.theme;
@@ -159,8 +141,6 @@
 
   onMount(() => {
     initializePreferences();
-    fullscreenEnabled = document.fullscreenEnabled;
-    void highlight();
     scrollToHash();
   });
 
@@ -195,14 +175,12 @@
     searchOpen = false;
     query = "";
     activeMatch = 0;
-    void highlight();
   }
 
   async function updateSearch(event: Event) {
     const input = event.currentTarget as HTMLInputElement;
     query = input.value;
     activeMatch = 0;
-    highlightedLines = null;
     await tick();
     scrollToActiveMatch();
   }
@@ -238,7 +216,6 @@
     const nextTheme = theme === "dark" ? "light" : "dark";
     setTheme(nextTheme);
     savePreference("theme", nextTheme);
-    void highlight();
   }
 
   function toggleWrap() {
@@ -270,7 +247,6 @@
       url.searchParams.delete("view");
     }
     await goto(url, { replaceState: true, noScroll: true, keepFocus: true });
-    await highlight();
   }
 
   function selectLanguage(event: Event) {
@@ -447,7 +423,6 @@
         >
         <button
           class="icon-button"
-          disabled={!fullscreenEnabled}
           aria-label="Enter fullscreen"
           aria-pressed={Boolean(editor && fullscreenElement === editor)}
           title="Fullscreen (F)"
@@ -592,7 +567,11 @@
                 {/each}
               {:else if highlightedLines?.[line.number - 1]}
                 {#each highlightedLines[line.number - 1] as token (token.offset)}
-                  <span style:color={token.color ?? "inherit"}>{token.content}</span>
+                  <span
+                    class="syntax-token"
+                    style:--shiki-dark={token.darkColor}
+                    style:--shiki-light={token.lightColor}>{token.content}</span
+                  >
                 {/each}
               {:else}
                 {line.text}

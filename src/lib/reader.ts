@@ -2,6 +2,13 @@ export const maxVisibleLines = 10_000;
 export const maxSearchMatches = 1_000;
 export const maxHighlightedCharacters = 100_000;
 
+export interface HighlightToken {
+  content: string;
+  darkColor: string;
+  lightColor: string;
+  offset: number;
+}
+
 export interface TextSegment {
   key: number;
   matchIndex: number | null;

@@ -19,7 +19,6 @@
   let editor = $state<HTMLElement>();
   let fontSize = $state(14);
   let fullscreenElement = $state<Element | null>(null);
-  let fullscreenEnabled = $state(false);
   let shortcutsDialog = $state<HTMLDialogElement>();
   let status = $state("");
   let theme = $state<"dark" | "light">("dark");
@@ -63,7 +62,6 @@
     const savedFont = Number(readPreference("font"));
     const validFont = Number.isInteger(savedFont) && savedFont >= 12 && savedFont <= 22;
     fontSize = validFont ? savedFont : 14;
-    fullscreenEnabled = document.fullscreenEnabled;
   });
 
   async function copyLink() {
@@ -165,7 +163,6 @@
         <button class="icon-button" aria-label="Show line numbers" aria-pressed="true" title="Line numbers">#</button>
         <button
           class="icon-button"
-          disabled={!fullscreenEnabled}
           aria-label="Enter fullscreen"
           aria-pressed={Boolean(editor && fullscreenElement === editor)}
           title="Fullscreen"
