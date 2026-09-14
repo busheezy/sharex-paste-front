@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { goto, replaceState } from "$app/navigation";
+  import { goto } from "$app/navigation";
   import { page } from "$app/state";
   import { languageOptions } from "$lib/languages";
   import {
@@ -242,7 +242,7 @@
     savePreference("font", input.value);
   }
 
-  function setView(view: "source" | "preview") {
+  async function setView(view: "source" | "preview") {
     const url = new URL(page.url);
     if (view === "preview") {
       url.searchParams.set("view", "preview");
@@ -251,8 +251,8 @@
     } else {
       url.searchParams.delete("view");
     }
-    replaceState(url, page.state);
-    void highlight();
+    await goto(url, { replaceState: true, noScroll: true, keepFocus: true });
+    await highlight();
   }
 
   function selectLanguage(event: Event) {
