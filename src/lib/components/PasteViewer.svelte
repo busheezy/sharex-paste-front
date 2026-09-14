@@ -131,6 +131,9 @@
     const savedFont = Number(readPreference("font"));
     const validFont = Number.isInteger(savedFont) && savedFont >= 12 && savedFont <= 22;
     fontSize = validFont ? savedFont : 14;
+    document.documentElement.dataset.wrap = String(wrapped);
+    document.documentElement.dataset.lines = String(numbered);
+    document.documentElement.style.setProperty("--code-size", `${fontSize}px`);
   }
 
   function scrollToHash() {
@@ -228,17 +231,20 @@
 
   function toggleWrap() {
     wrapped = !wrapped;
+    document.documentElement.dataset.wrap = String(wrapped);
     savePreference("wrap", String(wrapped));
   }
 
   function toggleLines() {
     numbered = !numbered;
+    document.documentElement.dataset.lines = String(numbered);
     savePreference("lines", String(numbered));
   }
 
   function updateFont(event: Event) {
     const input = event.currentTarget as HTMLInputElement;
     fontSize = Number(input.value);
+    document.documentElement.style.setProperty("--code-size", `${fontSize}px`);
     savePreference("font", input.value);
   }
 
@@ -382,7 +388,6 @@
     class:no-lines={!numbered && !isPreview}
     class="editor"
     aria-label="Reading workspace"
-    style:--code-size={`${fontSize}px`}
   >
     <div class="editor-toolbar">
       <label class="language-control">

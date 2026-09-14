@@ -10,6 +10,7 @@
   --code-size: 14px;
   background: var(--bg);
   color: var(--text);
+  scrollbar-gutter: stable;
 }
 :root[data-theme="light"] {
   color-scheme: light;
@@ -271,18 +272,22 @@ select {
   background: var(--surface);
   box-shadow: inset 2px 0 var(--accent);
 }
-.wrap .code-line {
+.wrap .code-line,
+:root[data-wrap="true"] .source-content .code-line {
   min-width: 0;
 }
-.wrap .line-text {
+.wrap .line-text,
+:root[data-wrap="true"] .source-content .line-text {
   white-space: pre-wrap;
   overflow-wrap: anywhere;
   min-width: 0;
 }
-.no-lines .line-number {
+.no-lines .line-number,
+:root[data-lines="false"] .source-content .line-number {
   display: none;
 }
-.no-lines .code-line {
+.no-lines .code-line,
+:root[data-lines="false"] .source-content .code-line {
   padding-left: 20px;
 }
 .markdown-content {

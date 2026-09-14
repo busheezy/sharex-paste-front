@@ -15,7 +15,16 @@
           ? "light"
           : "dark";
         const theme = validTheme ? storedTheme : preferredTheme;
+        const storedFontSize = Number(localStorage.getItem("paste:font"));
+        const validFontSize =
+          Number.isInteger(storedFontSize) && storedFontSize >= 12 && storedFontSize <= 22;
+        const fontSize = validFontSize ? storedFontSize : 14;
+        const wrapped = localStorage.getItem("paste:wrap") === "true";
+        const numbered = localStorage.getItem("paste:lines") !== "false";
         document.documentElement.dataset.theme = theme;
+        document.documentElement.dataset.wrap = String(wrapped);
+        document.documentElement.dataset.lines = String(numbered);
+        document.documentElement.style.setProperty("--code-size", `${fontSize}px`);
       } catch {
         document.documentElement.dataset.theme = "dark";
       }
