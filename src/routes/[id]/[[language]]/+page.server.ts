@@ -4,7 +4,7 @@ import { renderMarkdown } from "$lib/server/markdown";
 import { fetchPaste } from "$lib/server/pastes";
 import type { PageServerLoad } from "./$types";
 
-export const load: PageServerLoad = async ({ fetch, params, url }) => {
+export const load: PageServerLoad = async ({ fetch, locals, params, url }) => {
   const paste = await fetchPaste(params.id, fetch);
   const requestedLanguage = params.language ?? "";
   const language = resolveLanguage(requestedLanguage);
@@ -21,6 +21,7 @@ export const load: PageServerLoad = async ({ fetch, params, url }) => {
     languageOptions,
     markdownHtml,
     paste,
+    preferences: locals.readerPreferences,
     rawUrl,
   };
 };

@@ -2,48 +2,33 @@
   import { goto, replaceState } from "$app/navigation";
   import { page } from "$app/state";
   import { createDiffLines, createSplitRows, getMarker, type DiffLine } from "$lib/diff";
+  import { writeReaderPreferences, type ReaderPreferences } from "$lib/preferences";
   import { maxVisibleLines } from "$lib/reader";
-  import { onMount } from "svelte";
 
   interface Props {
     leftId: string;
     leftPaste: string;
+    preferences: ReaderPreferences;
     rightId: string;
     rightPaste: string;
   }
 
-  const { leftId, leftPaste, rightId, rightPaste }: Props = $props();
+  const { leftId, leftPaste, preferences, rightId, rightPaste }: Props = $props();
   let compareDialog = $state<HTMLDialogElement>();
   let compareError = $state("");
   let compareInput = $state("");
   let editor = $state<HTMLElement>();
-  let fontSize = $state(14);
+  let fontSize = $derived(preferences.fontSize);
   let fullscreenElement = $state<Element | null>(null);
   let shortcutsDialog = $state<HTMLDialogElement>();
   let status = $state("");
-  let theme = $state<"dark" | "light">("dark");
+  let theme = $derived(preferences.theme);
 
   const allLines = $derived(createDiffLines(leftPaste, rightPaste));
   const lines = $derived(allLines.slice(0, maxVisibleLines));
   const splitRows = $derived(createSplitRows(lines));
   const truncated = $derived(allLines.length > lines.length);
   const view = $derived(page.url.searchParams.get("view") === "split" ? "split" : "inline");
-
-  function readPreference(key: string) {
-    try {
-      return localStorage.getItem(`paste:${key}`);
-    } catch {
-      return null;
-    }
-  }
-
-  function savePreference(key: string, value: string) {
-    try {
-      localStorage.setItem(`paste:${key}`, value);
-    } catch {
-      return;
-    }
-  }
 
   function setTheme(value: "dark" | "light") {
     theme = value;
@@ -54,15 +39,15 @@
     }
   }
 
-  onMount(() => {
-    const storedTheme = readPreference("theme");
-    const documentTheme = document.documentElement.dataset.theme;
-    const initialTheme = storedTheme === "light" || documentTheme === "light" ? "light" : "dark";
-    setTheme(initialTheme);
-    const savedFont = Number(readPreference("font"));
-    const validFont = Number.isInteger(savedFont) && savedFont >= 12 && savedFont <= 22;
-    fontSize = validFont ? savedFont : 14;
-  });
+  function persistPreferences() {
+    const nextPreferences = {
+      fontSize,
+      numbered: preferences.numbered,
+      theme,
+      wrapped: preferences.wrapped,
+    };
+    writeReaderPreferences(nextPreferences);
+  }
 
   async function copyLink() {
     try {
@@ -98,13 +83,13 @@
   function toggleTheme() {
     const nextTheme = theme === "dark" ? "light" : "dark";
     setTheme(nextTheme);
-    savePreference("theme", nextTheme);
+    persistPreferences();
   }
 
   function updateFont(event: Event) {
     const input = event.currentTarget as HTMLInputElement;
     fontSize = Number(input.value);
-    savePreference("font", input.value);
+    persistPreferences();
   }
 
   function getComparisonId(value: string) {

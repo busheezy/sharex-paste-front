@@ -1,6 +1,7 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
   import { page } from "$app/state";
+  import { writeReaderPreferences, type ReaderPreferences } from "$lib/preferences";
   import {
     buildSourceLines,
     maxHighlightedCharacters,
@@ -17,19 +18,8 @@
     languageOptions: Array<{ label: string; value: string }>;
     markdownHtml: string | null;
     paste: string;
+    preferences: ReaderPreferences;
     rawUrl: string;
-  }
-
-  function getInitialFontSize() {
-    if (typeof document === "undefined") {
-      return 14;
-    }
-
-    const initialFontSize = Number(document.documentElement.dataset.fontSize);
-    const validFontSize =
-      Number.isInteger(initialFontSize) && initialFontSize >= 12 && initialFontSize <= 22;
-
-    return validFontSize ? initialFontSize : 14;
   }
 
   const {
@@ -39,6 +29,7 @@
     languageOptions,
     markdownHtml,
     paste,
+    preferences,
     rawUrl,
   }: Props = $props();
   let activeMatch = $state(0);
@@ -46,16 +37,16 @@
   let compareError = $state("");
   let compareInput = $state("");
   let editor = $state<HTMLElement>();
-  let fontSize = $state(getInitialFontSize());
+  let fontSize = $derived(preferences.fontSize);
   let fullscreenElement = $state<Element | null>(null);
-  let numbered = $state(true);
+  let numbered = $derived(preferences.numbered);
   let query = $state("");
   let searchInput = $state<HTMLInputElement>();
   let searchOpen = $state(false);
   let shortcutsDialog = $state<HTMLDialogElement>();
   let status = $state("");
-  let theme = $state<"dark" | "light">("dark");
-  let wrapped = $state(false);
+  let theme = $derived(preferences.theme);
+  let wrapped = $derived(preferences.wrapped);
 
   const lineCount = $derived(paste.split(/\r\n|\n|\r/).length);
   const isLargePaste = $derived(paste.length > maxHighlightedCharacters);
@@ -67,22 +58,6 @@
   const sourceLines = $derived(sourceResult.sourceLines);
   const searchCount = $derived(getSearchCount(query, matchCount, activeMatch));
   const renderStatus = $derived(getRenderStatus(isLargePaste, isTruncated));
-
-  function readPreference(key: string) {
-    try {
-      return localStorage.getItem(`paste:${key}`);
-    } catch {
-      return null;
-    }
-  }
-
-  function savePreference(key: string, value: string) {
-    try {
-      localStorage.setItem(`paste:${key}`, value);
-    } catch {
-      return;
-    }
-  }
 
   function getSearchCount(searchQuery: string, count: number, active: number) {
     if (!searchQuery) {
@@ -115,19 +90,14 @@
     }
   }
 
-  function initializePreferences() {
-    const storedTheme = readPreference("theme");
-    const documentTheme = document.documentElement.dataset.theme;
-    const initialTheme = storedTheme === "light" || documentTheme === "light" ? "light" : "dark";
-    setTheme(initialTheme);
-    wrapped = readPreference("wrap") === "true";
-    numbered = readPreference("lines") !== "false";
-    const savedFont = Number(readPreference("font"));
-    const validFont = Number.isInteger(savedFont) && savedFont >= 12 && savedFont <= 22;
-    fontSize = validFont ? savedFont : 14;
-    document.documentElement.dataset.wrap = String(wrapped);
-    document.documentElement.dataset.lines = String(numbered);
-    document.documentElement.style.setProperty("--code-size", `${fontSize}px`);
+  function persistPreferences() {
+    const nextPreferences = {
+      fontSize,
+      numbered,
+      theme,
+      wrapped,
+    };
+    writeReaderPreferences(nextPreferences);
   }
 
   function scrollToHash() {
@@ -140,7 +110,6 @@
   }
 
   onMount(() => {
-    initializePreferences();
     scrollToHash();
   });
 
@@ -215,26 +184,26 @@
   function toggleTheme() {
     const nextTheme = theme === "dark" ? "light" : "dark";
     setTheme(nextTheme);
-    savePreference("theme", nextTheme);
+    persistPreferences();
   }
 
   function toggleWrap() {
     wrapped = !wrapped;
     document.documentElement.dataset.wrap = String(wrapped);
-    savePreference("wrap", String(wrapped));
+    persistPreferences();
   }
 
   function toggleLines() {
     numbered = !numbered;
     document.documentElement.dataset.lines = String(numbered);
-    savePreference("lines", String(numbered));
+    persistPreferences();
   }
 
   function updateFont(event: Event) {
     const input = event.currentTarget as HTMLInputElement;
     fontSize = Number(input.value);
     document.documentElement.style.setProperty("--code-size", `${fontSize}px`);
-    savePreference("font", input.value);
+    persistPreferences();
   }
 
   async function setView(view: "source" | "preview") {

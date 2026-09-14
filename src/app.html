@@ -1,48 +1,15 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-reader-preferences>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="color-scheme" content="dark light" />
     <meta name="darkreader-lock" />
-    <meta name="theme-color" content="#111217" />
+    <meta name="theme-color" content="reader-theme-color" />
     <link rel="icon" href="%sveltekit.assets%/favicon.svg" type="image/svg+xml" />
-    <script nonce="%sveltekit.nonce%">
-      try {
-        const storedTheme = localStorage.getItem("paste:theme");
-        const validTheme = storedTheme === "light" || storedTheme === "dark";
-        const preferredTheme = matchMedia("(prefers-color-scheme: light)").matches
-          ? "light"
-          : "dark";
-        const theme = validTheme ? storedTheme : preferredTheme;
-        const storedFontSize = Number(localStorage.getItem("paste:font"));
-        const validFontSize =
-          Number.isInteger(storedFontSize) && storedFontSize >= 12 && storedFontSize <= 22;
-        const fontSize = validFontSize ? storedFontSize : 14;
-        const wrapped = localStorage.getItem("paste:wrap") === "true";
-        const numbered = localStorage.getItem("paste:lines") !== "false";
-        document.documentElement.dataset.theme = theme;
-        document.documentElement.dataset.wrap = String(wrapped);
-        document.documentElement.dataset.lines = String(numbered);
-        document.documentElement.dataset.fontSize = String(fontSize);
-        document.documentElement.style.setProperty("--code-size", `${fontSize}px`);
-      } catch {
-        document.documentElement.dataset.theme = "dark";
-      }
-    </script>
     %sveltekit.head%
   </head>
   <body data-sveltekit-preload-data="hover">
     <div style="display: contents">%sveltekit.body%</div>
-    <script nonce="%sveltekit.nonce%">
-      const fontSize = document.documentElement.dataset.fontSize;
-      const fontInput = document.querySelector('[data-font-control] input[type="range"]');
-      const fontOutput = document.querySelector("[data-font-control] output");
-
-      if (fontSize && fontInput instanceof HTMLInputElement && fontOutput) {
-        fontInput.value = fontSize;
-        fontOutput.textContent = `${fontSize}px`;
-      }
-    </script>
   </body>
 </html>
