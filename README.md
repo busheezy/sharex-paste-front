@@ -3,6 +3,7 @@
 A minimal viewer for shared text and code. Open `/:id` for plain text or `/:id/:language` for syntax highlighting, such as `/abc123/typescript`. Existing API and shared-link formats remain compatible.
 
 - Light and dark themes, syntax highlighting, and language selection.
+- Sanitized Markdown previews with shareable `?view=preview` links.
 - In-paste search with next/previous matches, line numbers, and shareable line anchors.
 - Inline and side-by-side comparisons with shareable `/diff/:left/:right` links.
 - Adjustable font size, word wrapping, fullscreen, and print styles.

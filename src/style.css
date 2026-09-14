@@ -285,6 +285,78 @@ select {
 .no-lines .code-line {
   padding-left: 20px;
 }
+.markdown-content {
+  width: min(100%, 920px);
+  margin: 0 auto;
+  padding: 32px clamp(20px, 5vw, 64px) 64px;
+  font:
+    var(--code-size)/1.65 system-ui,
+    sans-serif;
+  overflow-wrap: anywhere;
+}
+.markdown-content > :first-child {
+  margin-top: 0;
+}
+.markdown-content h1,
+.markdown-content h2 {
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid var(--border);
+}
+.markdown-content h1 {
+  font-size: 2em;
+}
+.markdown-content h2 {
+  font-size: 1.5em;
+}
+.markdown-content h3 {
+  font-size: 1.25em;
+}
+.markdown-content a {
+  color: var(--accent);
+}
+.markdown-content blockquote {
+  margin-left: 0;
+  padding-left: 1em;
+  border-left: 3px solid var(--border);
+  color: var(--muted);
+}
+.markdown-content code,
+.markdown-content pre {
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  background: var(--surface);
+}
+.markdown-content code {
+  padding: 0.15em 0.35em;
+  border-radius: 4px;
+}
+.markdown-content pre {
+  padding: 16px;
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+.markdown-content pre code {
+  padding: 0;
+  background: transparent;
+}
+.markdown-content img {
+  max-width: 100%;
+}
+.markdown-content table {
+  display: block;
+  max-width: 100%;
+  overflow: auto;
+  border-collapse: collapse;
+}
+.markdown-content th,
+.markdown-content td {
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+}
+.markdown-content hr {
+  border: 0;
+  border-top: 1px solid var(--border);
+}
 .search-bar {
   display: flex;
   align-items: center;

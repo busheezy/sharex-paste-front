@@ -1,10 +1,21 @@
+import DOMPurify from "dompurify";
+import { marked } from "marked";
 import { bundledLanguagesInfo, codeToTokens, type BundledLanguage } from "shiki";
 
 const content = document.querySelector<HTMLDivElement>("#content")!;
 const language = document.querySelector<HTMLSelectElement>("#language")!;
 const renderStatus = document.querySelector<HTMLElement>("#renderStatus")!;
 const searchCount = document.querySelector<HTMLOutputElement>("#searchCount")!;
-const state = { text: "", revision: 0, query: "", active: 0, matches: 0 };
+type ReaderView = "source" | "preview";
+
+const state = {
+  text: "",
+  revision: 0,
+  query: "",
+  active: 0,
+  matches: 0,
+  view: "source" as ReaderView,
+};
 
 for (const info of bundledLanguagesInfo) {
   const option = new Option(info.name, info.id);
@@ -76,6 +87,12 @@ export function navigateMatch(delta: number) {
 
 export async function render() {
   const revision = ++state.revision;
+  if (state.view === "preview" && language.value === "markdown") {
+    renderMarkdown();
+    return;
+  }
+
+  content.className = "";
   const lines = state.text.split(/\r\n|\n|\r/);
   const visible = lines.slice(0, 10_000);
   state.matches = 0;
@@ -96,6 +113,18 @@ export async function render() {
     return;
   }
   await highlight(elements, revision);
+}
+
+function renderMarkdown() {
+  const html = marked.parse(state.text, { async: false });
+  const fragment = DOMPurify.sanitize(html, {
+    RETURN_DOM_FRAGMENT: true,
+    USE_PROFILES: { html: true },
+  });
+  content.className = "markdown-content";
+  content.replaceChildren(fragment);
+  renderStatus.textContent = "";
+  searchCount.textContent = "";
 }
 
 async function highlight(elements: HTMLDivElement[], revision: number) {
@@ -131,8 +160,20 @@ export function search(query: string) {
   void render();
 }
 
-export async function setPaste(text: string, requestedLanguage: string) {
+export function clearSearch() {
+  state.query = "";
+  state.active = 0;
+  state.matches = 0;
+  searchCount.textContent = "";
+}
+
+export async function setPaste(
+  text: string,
+  requestedLanguage: string,
+  view: ReaderView = "source",
+) {
   state.text = text;
+  state.view = view;
   const selected = bundledLanguagesInfo.find(
     (info) => info.id === requestedLanguage || info.aliases?.includes(requestedLanguage),
   );
@@ -143,4 +184,9 @@ export async function setPaste(text: string, requestedLanguage: string) {
     const line = document.getElementById(hash.slice(1));
     line?.scrollIntoView({ block: "center" });
   }
+}
+
+export async function setReaderView(view: ReaderView) {
+  state.view = view;
+  await render();
 }

@@ -1,7 +1,7 @@
 import "./style.css";
 import { renderDiff } from "./diff";
 import { initializePreferences } from "./preferences";
-import { navigateMatch, render, search, setPaste } from "./reader";
+import { clearSearch, navigateMatch, search, setPaste, setReaderView } from "./reader";
 
 const content = document.querySelector<HTMLDivElement>("#content")!;
 const status = document.querySelector<HTMLParagraphElement>("#status")!;
@@ -30,7 +30,19 @@ const diffViewControl = document.querySelector<HTMLElement>("#diffViewControl")!
 const diffNames = document.querySelector<HTMLElement>("#diffNames")!;
 const inlineDiffButton = document.querySelector<HTMLButtonElement>("#inlineDiffBtn")!;
 const splitDiffButton = document.querySelector<HTMLButtonElement>("#splitDiffBtn")!;
-const state = { paste: "", comparison: "", id: "", comparisonId: "", loaded: false };
+const markdownViewControl = document.querySelector<HTMLElement>("#markdownViewControl")!;
+const sourceButton = document.querySelector<HTMLButtonElement>("#sourceBtn")!;
+const previewButton = document.querySelector<HTMLButtonElement>("#previewBtn")!;
+const wrapButton = document.querySelector<HTMLButtonElement>("#wrapBtn")!;
+const linesButton = document.querySelector<HTMLButtonElement>("#linesBtn")!;
+const state = {
+  paste: "",
+  comparison: "",
+  id: "",
+  comparisonId: "",
+  loaded: false,
+  view: "source" as "source" | "preview",
+};
 
 function displayRoute() {
   const isHome = window.location.pathname === "/";
@@ -60,6 +72,11 @@ function getRoute() {
 function getDiffView() {
   const value = new URLSearchParams(window.location.search).get("view");
   return value === "split" ? "split" : "inline";
+}
+
+function getPasteView() {
+  const value = new URLSearchParams(window.location.search).get("view");
+  return value === "preview" ? "preview" : "source";
 }
 
 async function fetchPaste(id: string) {
@@ -158,7 +175,7 @@ function handleKeydown(event: KeyboardEvent) {
     return;
   }
   const find = (event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "f";
-  if (find && !dialog.open) {
+  if (find && !dialog.open && state.view === "source") {
     event.preventDefault();
     openSearch();
     return;
@@ -188,6 +205,8 @@ function initializeControls() {
   };
   inlineDiffButton.onclick = () => setDiffView("inline");
   splitDiffButton.onclick = () => setDiffView("split");
+  sourceButton.onclick = () => setPasteView("source");
+  previewButton.onclick = () => setPasteView("preview");
   downloadButton.onclick = download;
   searchButton.onclick = openSearch;
   document.querySelector<HTMLButtonElement>("#closeSearch")!.onclick = closeSearch;
@@ -213,9 +232,14 @@ function initializeControls() {
   language.onchange = () => {
     const id = encodeURIComponent(state.id);
     const suffix = language.value === "text" ? "" : `/${language.value}`;
-    const path = `/${id}${suffix}${window.location.hash}`;
-    history.replaceState(null, "", path);
-    void render();
+    const url = new URL(window.location.href);
+    url.pathname = `/${id}${suffix}`;
+    if (language.value !== "markdown") {
+      url.searchParams.delete("view");
+    }
+    history.replaceState(null, "", url);
+    const view = getPasteView();
+    void applyPasteView(view);
   };
   document.addEventListener("keydown", handleKeydown);
 }
@@ -255,6 +279,42 @@ function setDiffView(view: "inline" | "split") {
   renderDiff(state.paste, state.comparison, view);
 }
 
+async function setPasteView(view: "source" | "preview") {
+  const url = new URL(window.location.href);
+  if (view === "preview") {
+    url.searchParams.set("view", "preview");
+  } else {
+    url.searchParams.delete("view");
+  }
+  history.replaceState(null, "", url);
+  await applyPasteView(view);
+}
+
+function syncPasteView(view: "source" | "preview") {
+  const canPreview = language.value === "markdown";
+  const activeView = canPreview ? view : "source";
+  const isPreview = activeView === "preview";
+  state.view = activeView;
+  markdownViewControl.hidden = !canPreview;
+  sourceButton.setAttribute("aria-pressed", String(!isPreview));
+  previewButton.setAttribute("aria-pressed", String(isPreview));
+  searchButton.disabled = isPreview;
+  wrapButton.disabled = isPreview;
+  linesButton.disabled = isPreview;
+  if (isPreview) {
+    searchBar.hidden = true;
+    searchInput.value = "";
+    clearSearch();
+  }
+
+  return activeView;
+}
+
+async function applyPasteView(view: "source" | "preview") {
+  const activeView = syncPasteView(view);
+  await setReaderView(activeView);
+}
+
 function displayPaste(paste: string, url: URL) {
   state.paste = paste;
   state.loaded = true;
@@ -263,6 +323,7 @@ function displayPaste(paste: string, url: URL) {
   rawAnchor.hidden = false;
   content.className = "";
   diffViewControl.hidden = true;
+  markdownViewControl.hidden = true;
   diffNames.hidden = true;
   languageControl.hidden = false;
   for (const button of [
@@ -287,6 +348,7 @@ function displayDiff(left: string, right: string) {
   state.loaded = true;
   document.title = `${state.id} ↔ ${state.comparisonId} · Diff`;
   diffViewControl.hidden = false;
+  markdownViewControl.hidden = true;
   diffNames.textContent = `${state.id} ↔ ${state.comparisonId}`;
   diffNames.hidden = false;
   languageControl.hidden = true;
@@ -320,7 +382,9 @@ async function loadPaste() {
     state.comparisonId = "";
     const result = await fetchPaste(route.id);
     displayPaste(result.paste, result.url);
-    await setPaste(result.paste, route.language);
+    const view = getPasteView();
+    await setPaste(result.paste, route.language, view);
+    syncPasteView(view);
   } catch (cause) {
     loading.hidden = true;
     errorPanel.hidden = false;
