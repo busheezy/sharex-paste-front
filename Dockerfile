@@ -1,4 +1,4 @@
-FROM node:24.19.0-bookworm-slim AS base
+FROM node:26.8-bookworm-slim AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
@@ -14,7 +14,7 @@ RUN --mount=type=cache,id=sharex-front-pnpm,target=/pnpm/store pnpm install --fr
 COPY . .
 RUN pnpm build
 
-FROM node:24.19.0-bookworm-slim AS runtime
+FROM node:26.8-bookworm-slim AS runtime
 ENV NODE_ENV="production"
 ENV HOST="0.0.0.0"
 ENV PORT="4000"
