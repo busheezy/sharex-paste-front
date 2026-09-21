@@ -122,8 +122,8 @@ importers:
         specifier: ^4.4.3
         version: 4.4.3
       zod:
-        specifier: ^4.5.4
-        version: 4.6.4
+        specifier: ^4.6.5
+        version: 4.6.5
     devDependencies:
       '@sveltejs/adapter-node':
         specifier: ^5.5.7
@@ -1413,8 +1413,8 @@ packages:
   zimmerframe@1.1.5:
     resolution: {integrity: sha512-msJxIvYDYcoNL+PJsu+7qmpDWsYmAxTY+2TNYXXF0hzBzBk0BMecOqDOG/EckUoKCuKwObfbugIl8QpqHDXeFA==}
 
-  zod@4.6.4:
-    resolution: {integrity: sha512-AXSD6hvGdvRjajG/l1cC+d6IrhH+sjmPKtYeQdJIK8MFJl3LyClzS+o/YsVC+zQZPupAaeH5skwwm8YqYH7BqA==}
+  zod@4.6.5:
+    resolution: {integrity: sha512-v5l/aFXZQeai4awLbOpSoHecE9UiMrnfx75tEXLjNonXVARxQ5mOeipTjROUchszUNCqnE+hqAMujRsRHsut2Q==}
 
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
@@ -2438,6 +2438,6 @@ snapshots:
 
   zimmerframe@1.1.5: {}
 
-  zod@4.6.4: {}
+  zod@4.6.5: {}
 
   zwitch@2.0.4: {}
